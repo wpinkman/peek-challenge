@@ -17,9 +17,9 @@
     <h4>POST /api/timeslot</h4>
     <form action="/api/timeslot" method="post">
     	<label for="start_time">start_time (Example: 1406052000)</label>
-    	<input id="start_time" type="text" name="start_time">
+    	<input id="start_time" type="text" name="timeslot[start_time]">
     	<label for="duration">duration (minutes)</label>
-    	<input id="duration" type="text" name="duration">
+    	<input id="duration" type="text" name="timeslot[duration]">
     	<input type="submit"/>
     </form>
     <h4>GET /api/timeslots</h4>
@@ -29,9 +29,9 @@
     <h4>POST /api/boat</h4>
     <form action="/api/boat" method="post">
     	<label for="capacity">capacity</label>
-    	<input id="capacity" type="text" name="capacity">
+    	<input id="capacity" type="text" name="boat[capacity]">
     	<label for="name">name</label>
-    	<input id="name" type="text" name="name">
+    	<input id="name" type="text" name="boat[name]">
     	<input type="submit"/>
     </form>
     <h4>GET /api/boats</h4>
