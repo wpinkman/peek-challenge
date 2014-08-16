@@ -14,6 +14,18 @@
 
   <body>
     <h1>Hello Piranha People!</h1>
+    <h4>POST /api/timeslot</h4>
+    <form action="/api/timeslot" method="post">
+    	<label for="start_time">start_time (Example: 1406052000)</label>
+    	<input id="start_time" type="text" name="start_time">
+    	<label for="duration">duration (minutes)</label>
+    	<input id="duration" type="text" name="duration">
+    	<input type="submit"/>
+    </form>
+    <h4>GET /api/timeslots</h4>
+    <form action="/api/timeslots" method="get">
+    	<input type="submit"/>
+    </form>
 	
   </body>
 </html>
