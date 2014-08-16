@@ -1,6 +1,10 @@
 package com.rokagram.peek.web;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +21,19 @@ public class TimeslotsServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		ServletUtils.writeResponseJson(req, resp, DAO.ofy().load().type(TimeslotEntity.class).list());
+		try {
+			String dateParam = req.getParameter("date");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = sdf.parse(dateParam);
+
+			List<TimeslotEntity> timeslots = DAO.ofy().load().type(TimeslotEntity.class)
+					.filter("start_time >=", date.getTime()).filter("start_time <", date.getTime() + 86400000L).list();
+
+			ServletUtils.writeResponseJson(req, resp, timeslots);
+		} catch (ParseException e) {
+			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		}
+
 	}
 
 	@Override
