@@ -20,6 +20,7 @@ public class ServletUtils {
 			throws IOException, JsonGenerationException, JsonMappingException {
 
 		resp.setContentType("application/json");
+		resp.addHeader("Access-Control-Allow-Origin", "*");
 		mapper.writeValue(resp.getOutputStream(), object);
 	}
 
