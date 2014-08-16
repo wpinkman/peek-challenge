@@ -27,15 +27,12 @@ public class WipeDatastoreServlet extends HttpServlet {
 		DAO.ofy().delete().keys(DAO.ofy().load().type(BoatEntity.class).keys());
 
 		System.out.println("****** WIPED ENTIRE DATA STORE *****");
+		resp.sendRedirect("/");
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("text/plain");
-
-		BookingEntity be = new BookingEntity();
-		be.setTimeslot_id(1234);
-		DAO.ofy().save().entity(be).now();
 
 		PrintWriter writer = resp.getWriter();
 
