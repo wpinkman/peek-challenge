@@ -1,14 +1,29 @@
 package com.rokagram.peek.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Stringify;
+import com.googlecode.objectify.stringifier.Stringifier;
+
+class LongStringifier implements Stringifier<Long> {
+	@Override
+	public String toString(Long obj) {
+		return obj.toString();
+	}
+
+	@Override
+	public Long fromString(String str) {
+		return Long.parseLong(str);
+	}
+}
 
 @Entity
 @Cache
@@ -20,12 +35,9 @@ public class TimeslotEntity {
 	private long start_time;
 	private int duration;
 
-	@Ignore
-	private int customer_count;
-	@Ignore
-	private int availability;
-
-	private List<Long> boats = new ArrayList<Long>();
+	@JsonIgnore
+	@Stringify(LongStringifier.class)
+	private Map<Long, AssignedBoat> assignedBoats = new HashMap<Long, AssignedBoat>();
 
 	public Long getId() {
 		return id;
@@ -47,30 +59,46 @@ public class TimeslotEntity {
 		this.duration = duration;
 	}
 
-	public List<Long> getBoats() {
-		return boats;
+	// this is for JSON serialization (to meep the spec)
+	public Set<Long> getBoats() {
+		return getAssignedBoats().keySet();
 	}
 
 	public int getCustomer_count() {
-		return customer_count;
-	}
+		int ret = 0;
 
-	public void setCustomer_count(int customer_count) {
-		this.customer_count = customer_count;
+		for (AssignedBoat boat : getAssignedBoats().values()) {
+			ret += boat.getCustomer_count();
+		}
+
+		return ret;
 	}
 
 	public int getAvailability() {
-		return availability;
+		int ret = 0;
+
+		for (AssignedBoat boat : getAssignedBoats().values()) {
+			if (boat.isAvailable()) {
+				int openSeats = boat.getCapacity() - boat.getCustomer_count();
+				if (openSeats > ret) {
+					ret = openSeats;
+				}
+			}
+		}
+
+		return ret;
 	}
 
-	public void setAvailability(int availability) {
-		this.availability = availability;
+	public Map<Long, AssignedBoat> getAssignedBoats() {
+		return assignedBoats;
 	}
 
 	@Override
 	public String toString() {
 		Date startDate = new Date(start_time * 1000L);
+
 		return "TimeslotEntity [id=" + id + ", start_time=" + start_time + " (" + startDate + "), duration=" + duration
-				+ ", customer_count=" + customer_count + ", availability=" + availability + ", boats=" + boats + "]";
+				+ ", customer_count=" + getCustomer_count() + ", availability=" + getAvailability()
+				+ ", allocatedBoats=" + assignedBoats.toString() + "]";
 	}
 }

@@ -17,9 +17,9 @@
     <h4>POST /api/timeslot</h4>
     <form action="/api/timeslot" method="post">
     	<label for="start_time">start_time (Example: 1406052000)</label>
-    	<input id="start_time" type="text" name="timeslot[start_time]">
+    	<input id="start_time" type="text" value="1406052000" name="timeslot[start_time]">
     	<label for="duration">duration (minutes)</label>
-    	<input id="duration" type="text" name="timeslot[duration]">
+    	<input id="duration" type="text" name="timeslot[duration]" value="60">
     	<input type="submit"/>
     </form>
     <h4>GET /api/timeslots</h4>
