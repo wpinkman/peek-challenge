@@ -24,6 +24,8 @@
     </form>
     <h4>GET /api/timeslots</h4>
     <form action="/api/timeslots" method="get">
+    	<label for="date">date (Example: 2014-07-22)</label>
+    	<input id="date" type="text" value="*" name="date">
     	<input type="submit"/>
     </form>
     <h4>POST /api/boat</h4>
@@ -37,6 +39,15 @@
     <h4>GET /api/boats</h4>
     <form action="/api/boats" method="get">
     	<input type="submit"/>
+    </form>
+    <h4>GET /api/bookings</h4>
+    <form action="/api/bookings" method="get">
+    	<input type="submit"/>
+    </form>
+    
+    <h4>POST /api/wipeit</h4>
+    <form action="/api/wipeit" method="post">
+    	<input value="WIPE IT" type="submit"/>
     </form>
 	
   </body>

@@ -1,6 +1,8 @@
 package com.rokagram.peek.web;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +17,7 @@ import com.rokagram.peek.entity.TimeslotEntity;
 public class BookingServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+	public static final Logger log = Logger.getLogger(BookingServlet.class.getName());
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,13 +33,12 @@ public class BookingServlet extends HttpServlet {
 					TimeslotEntity timeslot = DAO.ofy().load().type(TimeslotEntity.class).id(timeslotId).now();
 					booking.setSize(size);
 
-					timeslot.setCustomer_count(timeslot.getCustomer_count() + size);
-					timeslot.setAvailability(timeslot.getAvailability() - size);
-
 					DAO.ofy().save().entities(booking, timeslot);
 					return booking;
 				}
 			});
+
+			log.info("created " + booking);
 
 			resp.setStatus(HttpServletResponse.SC_CREATED);
 			ServletUtils.writeResponseJson(req, resp, booking);
@@ -44,6 +46,13 @@ public class BookingServlet extends HttpServlet {
 		} catch (NumberFormatException nfe) {
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		List<BookingEntity> bookings = DAO.ofy().load().type(BookingEntity.class).list();
+		log.info(bookings.toString());
+		ServletUtils.writeResponseJson(req, resp, bookings);
 	}
 
 }

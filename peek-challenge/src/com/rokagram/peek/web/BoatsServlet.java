@@ -1,6 +1,8 @@
 package com.rokagram.peek.web;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,11 +14,14 @@ import com.rokagram.peek.entity.BoatEntity;
 
 public class BoatsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	public static final Logger log = Logger.getLogger(BoatsServlet.class.getName());
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		ServletUtils.writeResponseJson(req, resp, DAO.ofy().load().type(BoatEntity.class).list());
+		List<BoatEntity> boats = DAO.ofy().load().type(BoatEntity.class).list();
+		log.info(boats.toString());
+		ServletUtils.writeResponseJson(req, resp, boats);
 	}
 
 	@Override
@@ -30,6 +35,8 @@ public class BoatsServlet extends HttpServlet {
 			boat.setName(nameParam);
 
 			DAO.ofy().save().entity(boat).now();
+
+			log.info("added " + boat);
 
 			resp.setStatus(HttpServletResponse.SC_CREATED);
 			ServletUtils.writeResponseJson(req, resp, boat);

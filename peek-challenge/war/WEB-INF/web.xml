@@ -42,7 +42,32 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>AssignmentsServlet</servlet-name>
 		<url-pattern>/api/assignment</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AssignmentsServlet</servlet-name>
+		<url-pattern>/api/assignments</url-pattern>
+	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>BookingsServlet</servlet-name>
+		<servlet-class>com.rokagram.peek.web.BookingServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>BookingsServlet</servlet-name>
+		<url-pattern>/api/booking</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>BookingsServlet</servlet-name>
+		<url-pattern>/api/bookings</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>WipeDatastoreServlet</servlet-name>
+		<servlet-class>com.rokagram.peek.web.WipeDatastoreServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>WipeDatastoreServlet</servlet-name>
+		<url-pattern>/api/wipeit</url-pattern>
+	</servlet-mapping>
 	
 
 

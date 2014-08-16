@@ -1,13 +1,17 @@
 package com.rokagram.peek.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
+@Cache
 public class TimeslotEntity {
 	@Id
 	private Long id;
@@ -16,7 +20,9 @@ public class TimeslotEntity {
 	private long start_time;
 	private int duration;
 
+	@Ignore
 	private int customer_count;
+	@Ignore
 	private int availability;
 
 	private List<Long> boats = new ArrayList<Long>();
@@ -61,4 +67,10 @@ public class TimeslotEntity {
 		this.availability = availability;
 	}
 
+	@Override
+	public String toString() {
+		Date startDate = new Date(start_time * 1000L);
+		return "TimeslotEntity [id=" + id + ", start_time=" + start_time + " (" + startDate + "), duration=" + duration
+				+ ", customer_count=" + customer_count + ", availability=" + availability + ", boats=" + boats + "]";
+	}
 }
