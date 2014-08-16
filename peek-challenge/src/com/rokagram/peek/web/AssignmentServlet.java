@@ -46,6 +46,7 @@ public class AssignmentServlet extends HttpServlet {
 			}
 		});
 
+		ServletUtils.addAccessControlAllowEverything(resp);
 	}
 
 }

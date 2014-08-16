@@ -1,6 +1,7 @@
 package com.rokagram.peek.web;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,6 +27,34 @@ public class WipeDatastoreServlet extends HttpServlet {
 		DAO.ofy().delete().keys(DAO.ofy().load().type(BoatEntity.class).keys());
 
 		System.out.println("****** WIPED ENTIRE DATA STORE *****");
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setContentType("text/plain");
+
+		BookingEntity be = new BookingEntity();
+		be.setTimeslot_id(1234);
+		DAO.ofy().save().entity(be).now();
+
+		PrintWriter writer = resp.getWriter();
+
+		writer.println("Boats:");
+		for (BoatEntity boat : DAO.ofy().load().type(BoatEntity.class)) {
+			writer.println(boat);
+		}
+		writer.println();
+		writer.println("Timeslots:");
+		for (TimeslotEntity ts : DAO.ofy().load().type(TimeslotEntity.class)) {
+			writer.println(ts);
+		}
+
+		writer.println();
+		writer.println("Bookings:");
+		for (BookingEntity booking : DAO.ofy().load().type(BookingEntity.class)) {
+			writer.println(booking);
+		}
+
 	}
 
 }

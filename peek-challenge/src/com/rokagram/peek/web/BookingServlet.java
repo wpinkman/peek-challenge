@@ -109,7 +109,7 @@ public class BookingServlet extends HttpServlet {
 						entitiesToSave.add(booking);
 						entitiesToSave.add(timeslot);
 
-						DAO.ofy().save().entities(entitiesToSave);
+						DAO.ofy().save().entities(entitiesToSave).now();
 					}
 					return booking;
 				}
