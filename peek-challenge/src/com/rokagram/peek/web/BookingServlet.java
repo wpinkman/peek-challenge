@@ -83,15 +83,19 @@ public class BookingServlet extends HttpServlet {
 							for (TimeslotEntity ts : query) {
 								boolean overlapping = false;
 								if (!ts.getId().equals(timeslot.getId())) {
-									if (ts.getStart_time() + ts.getDuration() * 3600 > timeslot.getStart_time()) {
-										overlapping = true;
-									}
-									if (timeslot.getStart_time() + timeslot.getDuration() * 3600 > ts.getStart_time()) {
-										overlapping = true;
+									if (ts.getStart_time() < timeslot.getStart_time()) {
+										if (ts.getStart_time() + ts.getDuration() * 60 > timeslot.getStart_time()) {
+											overlapping = true;
+										}
+									} else {
+										if (timeslot.getStart_time() + timeslot.getDuration() * 60 > ts.getStart_time()) {
+											overlapping = true;
+										}
 									}
 
-									if (overlapping) {
-										ts.getAssignedBoats().get(allocatedBoatId).setAvailable(false);
+									if (overlapping && ts.getAssignedBoats().containsKey(allocatedBoatId)) {
+										AssignedBoat assignedBoat = ts.getAssignedBoats().get(allocatedBoatId);
+										assignedBoat.setAvailable(false);
 										entitiesToSave.add(ts);
 									}
 								}
@@ -117,14 +121,16 @@ public class BookingServlet extends HttpServlet {
 
 			if (booking != null) {
 				log.info("created " + booking);
+				resp.setStatus(HttpServletResponse.SC_CREATED);
+				ServletUtils.writeResponseJson(req, resp, booking);
 			} else {
 				log.warning("failed to book part of " + size + " to requested timeslot");
+				ServletUtils.addAccessControlAllowEverything(resp);
+				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			}
 
-			resp.setStatus(HttpServletResponse.SC_CREATED);
-			ServletUtils.writeResponseJson(req, resp, booking);
-
 		} catch (NumberFormatException nfe) {
+			ServletUtils.addAccessControlAllowEverything(resp);
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}
