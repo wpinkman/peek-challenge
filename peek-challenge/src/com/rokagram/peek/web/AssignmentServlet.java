@@ -57,23 +57,11 @@ public class AssignmentServlet extends HttpServlet {
 				try {
 					Query<TimeslotEntity> query = TimeslotsServlet.createTimeslotQuery(newString, true);
 					for (TimeslotEntity ts : query) {
-						boolean overlapping = false;
-						if (!ts.getId().equals(timeslot.getId())) {
-							if (ts.getStart_time() < timeslot.getStart_time()) {
-								if (ts.getStart_time() + ts.getDuration() * 60 > timeslot.getStart_time()) {
-									overlapping = true;
-								}
-							} else {
-								if (timeslot.getStart_time() + timeslot.getDuration() * 60 > ts.getStart_time()) {
-									overlapping = true;
-								}
-							}
 
-							if (overlapping && ts.getAssignedBoats().containsKey(boatId)) {
-								AssignedBoat assignedBoat = ts.getAssignedBoats().get(boatId);
-								if (assignedBoat.getCustomer_count() > 0) {
-									assBoat.setAvailable(false);
-								}
+						if (timeslot.overlapsWith(ts) && ts.getAssignedBoats().containsKey(boatId)) {
+							AssignedBoat assignedBoat = ts.getAssignedBoats().get(boatId);
+							if (assignedBoat.getCustomer_count() > 0) {
+								assBoat.setAvailable(false);
 							}
 						}
 					}

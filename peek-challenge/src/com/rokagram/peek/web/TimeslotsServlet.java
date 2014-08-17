@@ -39,10 +39,6 @@ public class TimeslotsServlet extends HttpServlet {
 					Query<TimeslotEntity> query = createTimeslotQuery(dateParam, false);
 					timeslots = query.list();
 
-					System.out.println("timeslots for " + dateParam);
-					for (TimeslotEntity timeslot : timeslots) {
-						System.out.println(timeslot.toString());
-					}
 					log.info(dateParam + ": " + timeslots.toString());
 
 				}
