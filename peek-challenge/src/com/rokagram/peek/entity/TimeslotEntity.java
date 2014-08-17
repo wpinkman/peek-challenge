@@ -98,20 +98,11 @@ public class TimeslotEntity {
 
 		if (this.id != null && other.id != null && other.duration > 0 && this.duration > 0) {
 
-			// can't overlap with youself
+			// can't overlap with yourself
 			if (!other.id.equals(this.id)) {
 
-				// debug
-				Date myStartDate = new Date(this.start_time * 1000);
 				long myEndTime = this.start_time + this.duration * 60;
-				Date myEndDate = new Date(myEndTime * 1000);
-
-				Date otherStartDate = new Date(other.start_time * 1000);
 				long otherEndTime = other.start_time + other.duration * 60;
-				Date otherEndDate = new Date(otherEndTime * 1000);
-
-				System.out.println("this :" + myStartDate + " = " + myEndDate);
-				System.out.println("that :" + otherStartDate + " = " + otherEndDate);
 
 				if (other.start_time < this.start_time) {
 					if (otherEndTime > this.start_time) {
@@ -122,12 +113,9 @@ public class TimeslotEntity {
 						ret = true;
 					}
 				}
-			} else {
-				System.out.println("this and that are the same object");
 			}
 		}
 
-		System.out.println("returning:" + ret);
 		return ret;
 	}
 
