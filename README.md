@@ -3,6 +3,8 @@ peek-challenge
 
 Java/GAE implementation of peek.com API challenge https://github.com/gadabout/passport
 
+Live version here: http://peekchallenge.appspot.com
+
 Notes
 ===========
 Uses Google App Engine as web application platform including the High Replication Datastore, fronted by Memcache. 
