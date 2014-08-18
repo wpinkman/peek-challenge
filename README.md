@@ -5,12 +5,6 @@ Java/GAE implementation of peek.com API challenge https://github.com/gadabout/pa
 
 Live version here: http://peekchallenge.appspot.com
 
-### Notes
-Uses Google App Engine as web application platform including the High Replication Datastore, fronted by Memcache. 
-
-### Dependancies
-1. Datastore interface: https://code.google.com/p/objectify-appengine/
-2. JSON serialization: https://github.com/FasterXML/jackson
 
 #### Implementation Notes
 
@@ -20,13 +14,27 @@ This implementation uses an "eventually consistent" data model meaning that it's
 
 For the API calls that modify data, transactions are used to ensure that mulitple entities are updated in consisten manor. There is one case not really covered by transaction which is that when assignments or bookings are being made, there is slim possibility that the underlying list of available time slots could change introducing (or alleviating) boat availability. If left as it, there would have to be a rule that time slots are set up in advance of assignments and bookings which could be enforced by some other application contraint. This seemed like a reasonable tradeoff for this exercise. If not acceptable in a real application, the data model could be modified to ensure that all the required read and writes could live in a transaction context. There would be a performance penalty for this. Alternative solutions are also possible if further assumptions are made. For example, timeslots could be store in a more strictly "per day" manor instead of just a big list queryable by start time. The "per day" approach could remove the need for queries and therefore allow cross entity transactions.
 
+
+### Dependancies
+1. Datastore interface (also adds caching): https://code.google.com/p/objectify-appengine/
+2. JSON serialization: https://github.com/FasterXML/jackson
+
 ### Ideas for Improvement
 1. Consider using the plural in RESTful API endpoints. For example, instead of having "boat" and "boats", just have "boats". A POST to "boats" adds a boat, a GET reads the list of boats. A specific boat could then be referenced by the semantic "boats/boat-id".
 2. In case of a conflict of boat allocation as in Test Case 2, it might be better to reflect that a boat is no longer available by not returning it in the "boats" field of the timeslots response. 
 
-
-
-
 ### Instructions to run
-1. Requires Google App Engine SDK for Java https://developers.google.com/appengine/downloads
-2. --add command line instruction here for starting development server
+If you want to just try it, there is a live deployed version available here: http://peekchallenge.appspot.com 
+You will need to change the API_HOST value in the client config to point to the live instance. There is a simple page at the root level of the implementation which allows all data to be wiped clean.
+
+Alternatively, the code can be run locally using the [development server](https://developers.google.com/appengine/docs/java/tools/devserver) provided with the [App Engine Java SDK](https://developers.google.com/appengine/downloads#Google_App_Engine_SDK_for_Java). The only way I've run it is by using the [Google Plugin for Eclipse](https://developers.google.com/appengine/docs/java/tools/eclipse) which includes the SDK. Eclipse Java EE IDE for Web Developers (Version: Kepler Service Release 2) was used for development and test along with version 1.9.9 of the SDK. I used the following flags to run locally:
+
+Dev server:
+**--port=3000** --disable_update_check --address=0.0.0.0 /Users/awaddell/git/peek-challenge/peek-challenge/war
+
+JVM:
+-Ddatastore.default_high_rep_job_policy_unapplied_job_pct=1 -javaagent:/Users/awaddell/kepler/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.9/appengine-java-sdk-1.9.9/lib/agent/appengine-agent.jar -Xmx512m -Xbootclasspath/p:/Users/awaddell/kepler/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.5/appengine-java-sdk-1.9.5/lib/override/appengine-dev-jdk-overrides.jar
+
+
+
+
