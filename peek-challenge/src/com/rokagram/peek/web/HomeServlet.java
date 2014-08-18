@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.cmd.LoadType;
 import com.rokagram.peek.dao.DAO;
 import com.rokagram.peek.entity.BoatEntity;
@@ -20,25 +21,16 @@ public class HomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-		DAO.ofy().delete().keys(DAO.ofy().load().type(TimeslotEntity.class).keys());
-
-		DAO.ofy().delete().keys(DAO.ofy().load().type(BookingEntity.class).keys());
-
-		DAO.ofy().delete().keys(DAO.ofy().load().type(BoatEntity.class).keys());
-
-		System.out.println("****** WIPED ENTIRE DATA STORE *****");
-		resp.sendRedirect("/");
-	}
-
-	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("text/html");
 
 		PrintWriter writer = resp.getWriter();
 
 		writer.println("<form  method=\"post\"><input value=\"DELETE ALL DATA\" type=\"submit\"/></form>");
+
+		if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
+			writer.println("<a  href=\"http://localhost:" + req.getLocalPort() + "/_ah/admin\">admin console</a>");
+		}
 
 		writeH4(writer, "Boats");
 		LoadType<BoatEntity> boats = DAO.ofy().load().type(BoatEntity.class);
@@ -72,4 +64,17 @@ public class HomeServlet extends HttpServlet {
 	private void writeH4(PrintWriter writer, String heading) {
 		writer.println("<h4>" + heading + "</h4>");
 	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		DAO.ofy().delete().keys(DAO.ofy().load().type(TimeslotEntity.class).keys());
+
+		DAO.ofy().delete().keys(DAO.ofy().load().type(BookingEntity.class).keys());
+
+		DAO.ofy().delete().keys(DAO.ofy().load().type(BoatEntity.class).keys());
+
+		resp.sendRedirect("/");
+	}
+
 }
