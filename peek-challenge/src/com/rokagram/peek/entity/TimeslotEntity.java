@@ -59,7 +59,7 @@ public class TimeslotEntity {
 		this.duration = duration;
 	}
 
-	// this is for JSON serialization (to meep the spec)
+	// this is for JSON serialization (to meet the spec)
 	public Set<Long> getBoats() {
 		return getAssignedBoats().keySet();
 	}
