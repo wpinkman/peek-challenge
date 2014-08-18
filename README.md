@@ -20,8 +20,11 @@ For the API calls that modify data, transactions are used to ensure that mulitpl
 2. JSON serialization: https://github.com/FasterXML/jackson
 
 ### Ideas for Improvement
+## challenge
 1. Consider using the plural in RESTful API endpoints. For example, instead of having "boat" and "boats", just have "boats". A POST to "boats" adds a boat, a GET reads the list of boats. A specific boat could then be referenced by the semantic "boats/boat-id".
 2. In case of a conflict of boat allocation as in Test Case 2, it might be better to reflect that a boat is no longer available by not returning it in the "boats" field of the timeslots response. 
+## implementation
+1. More efficient allocation of bookings to available boats. This implemntation tries to use a boat that is already going in the timeslot availble however this does not always maximize the largest available booking. Instead, more knowledge of time slot conflict could be added to the booking to boat allocation to keep larger blocks of seats available for booking.
 
 ### Instructions to run
 If you want to just try it, there is a live deployed version available here: http://peekchallenge.appspot.com 
