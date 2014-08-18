@@ -5,6 +5,18 @@
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 
+
+	<!-- an extremely simple page which dumps all data and allows the datastore to be wiped clean -->
+
+	<servlet>
+		<servlet-name>HomeServlet</servlet-name>
+		<servlet-class>com.rokagram.peek.web.HomeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HomeServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
 	<!-- servlets to implement.. keeping is simple, would normally use some type of dispatcher  -->
 	
 	<servlet>
@@ -60,21 +72,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/api/bookings</url-pattern>
 	</servlet-mapping>
 	
-	<servlet>
-		<servlet-name>WipeDatastoreServlet</servlet-name>
-		<servlet-class>com.rokagram.peek.web.WipeDatastoreServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>WipeDatastoreServlet</servlet-name>
-		<url-pattern>/api/wipeit</url-pattern>
-	</servlet-mapping>
-	
-
-
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
-
 	<!-- filters -->
 	<filter>
 		<filter-name>ObjectifyFilter</filter-name>

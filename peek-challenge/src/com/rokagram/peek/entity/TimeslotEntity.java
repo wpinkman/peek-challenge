@@ -28,6 +28,7 @@ class LongStringifier implements Stringifier<Long> {
 @Entity
 @Cache
 public class TimeslotEntity {
+
 	@Id
 	private Long id;
 
