@@ -28,4 +28,4 @@ Instructions to run
 ==================
 
 1. Requires Google App Engine SDK for Java https://developers.google.com/appengine/downloads
-2. <add command line instruction here for starting development server>
+2. --add command line instruction here for starting development server
