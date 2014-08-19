@@ -35,11 +35,6 @@ public class ServletUtils {
 		mapper.writeValue(resp.getOutputStream(), object);
 	}
 
-	/**
-	 * This header helps when testing with on localhost client
-	 * 
-	 * @param resp
-	 */
 	public static void addAccessControlAllowEverything(HttpServletResponse resp) {
 		resp.addHeader("Access-Control-Allow-Origin", "*");
 	}
