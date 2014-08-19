@@ -37,7 +37,7 @@ public class TimeslotsServlet extends HttpServlet {
 			ServletUtils.writeResponseJson(resp, timeslots);
 
 		} else {
-			ServletUtils.addAccessControlAllowEverythingLocalhost(resp);
+			ServletUtils.addAccessControlAllowEverything(resp);
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 

@@ -9,7 +9,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.appengine.api.utils.SystemProperty;
 
 public class ServletUtils {
 	private static ObjectMapper mapper = new ObjectMapper();
@@ -32,19 +31,17 @@ public class ServletUtils {
 			JsonGenerationException, JsonMappingException {
 
 		resp.setContentType("application/json");
-		addAccessControlAllowEverythingLocalhost(resp);
+		addAccessControlAllowEverything(resp);
 		mapper.writeValue(resp.getOutputStream(), object);
 	}
 
 	/**
-	 * This header helps when testing with on localhost
+	 * This header helps when testing with on localhost client
 	 * 
 	 * @param resp
 	 */
-	public static void addAccessControlAllowEverythingLocalhost(HttpServletResponse resp) {
-		if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
-			resp.addHeader("Access-Control-Allow-Origin", "*");
-		}
+	public static void addAccessControlAllowEverything(HttpServletResponse resp) {
+		resp.addHeader("Access-Control-Allow-Origin", "*");
 	}
 
 	/**

@@ -111,7 +111,7 @@ public class BookingServlet extends HttpServlet {
 			ServletUtils.writeResponseJson(resp, booking);
 		} else {
 			log.warning("failed to book part of " + size + " to requested timeslot");
-			ServletUtils.addAccessControlAllowEverythingLocalhost(resp);
+			ServletUtils.addAccessControlAllowEverything(resp);
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 

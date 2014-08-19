@@ -69,7 +69,7 @@ public class AssignmentServlet extends HttpServlet {
 			}
 		});
 
-		ServletUtils.addAccessControlAllowEverythingLocalhost(resp);
+		ServletUtils.addAccessControlAllowEverything(resp);
 	}
 
 }
