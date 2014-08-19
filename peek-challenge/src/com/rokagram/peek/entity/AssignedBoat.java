@@ -1,5 +1,12 @@
 package com.rokagram.peek.entity;
 
+/**
+ * Keeps track of boat assignments for each time slot. Could/should also have a
+ * list of references to the exact bookings allocated.
+ * 
+ * @author awaddell
+ * 
+ */
 public class AssignedBoat {
 
 	private int capacity;

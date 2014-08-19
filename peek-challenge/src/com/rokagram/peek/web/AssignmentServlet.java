@@ -47,13 +47,13 @@ public class AssignmentServlet extends HttpServlet {
 				assBoat.setCapacity(boat.getCapacity());
 				timeslot.getAssignedBoats().put(boat.getId(), assBoat);
 
-				// check if boat is allready allocated to an overlapping
-				// timeslot
+				// check if boat is already allocated to an overlapping timeslot
 
 				Date startDate = new Date(timeslot.getStart_time() * 1000);
 				String newString = new SimpleDateFormat(TimeslotsServlet.DATE_FORMAT).format(startDate);
 
 				List<TimeslotEntity> timeslotsForDay = DAO.getTimeslotsForDay(newString);
+
 				for (TimeslotEntity ts : timeslotsForDay) {
 
 					if (timeslot.overlapsWith(ts) && ts.getAssignedBoats().containsKey(boatId)) {
@@ -69,7 +69,7 @@ public class AssignmentServlet extends HttpServlet {
 			}
 		});
 
-		ServletUtils.addAccessControlAllowEverything(resp);
+		ServletUtils.addAccessControlAllowEverythingLocalhost(resp);
 	}
 
 }

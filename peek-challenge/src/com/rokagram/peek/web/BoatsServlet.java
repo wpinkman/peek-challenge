@@ -13,6 +13,7 @@ import com.rokagram.peek.dao.DAO;
 import com.rokagram.peek.entity.BoatEntity;
 
 public class BoatsServlet extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
 	public static final Logger log = Logger.getLogger(BoatsServlet.class.getName());
 
@@ -20,8 +21,10 @@ public class BoatsServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		List<BoatEntity> boats = DAO.ofy().load().type(BoatEntity.class).list();
+
 		log.info(boats.toString());
-		ServletUtils.writeResponseJson(req, resp, boats);
+
+		ServletUtils.writeResponseJson(resp, boats);
 	}
 
 	@Override
@@ -29,21 +32,19 @@ public class BoatsServlet extends HttpServlet {
 
 		String capacityParam = req.getParameter("boat[capacity]");
 		String nameParam = req.getParameter("boat[name]");
-		try {
-			BoatEntity boat = new BoatEntity();
-			boat.setCapacity(Integer.parseInt(capacityParam));
-			boat.setName(nameParam);
 
-			DAO.ofy().save().entity(boat).now();
+		BoatEntity boat = new BoatEntity();
+		boat.setCapacity(Integer.parseInt(capacityParam));
+		boat.setName(nameParam);
 
-			log.info("added " + boat);
+		DAO.ofy().save().entity(boat).now();
 
-			resp.setStatus(HttpServletResponse.SC_CREATED);
-			ServletUtils.writeResponseJson(req, resp, boat);
+		log.info("added " + boat);
 
-		} catch (NumberFormatException nfe) {
-			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		}
+		resp.setStatus(HttpServletResponse.SC_CREATED);
+
+		ServletUtils.writeResponseJson(resp, boat);
+
 	}
 
 }

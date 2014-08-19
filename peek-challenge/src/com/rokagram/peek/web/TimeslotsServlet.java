@@ -34,9 +34,10 @@ public class TimeslotsServlet extends HttpServlet {
 
 			log.info(dateParam + ": " + timeslots.toString());
 
-			ServletUtils.writeResponseJson(req, resp, timeslots);
+			ServletUtils.writeResponseJson(resp, timeslots);
 
 		} else {
+			ServletUtils.addAccessControlAllowEverythingLocalhost(resp);
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 
@@ -66,9 +67,6 @@ public class TimeslotsServlet extends HttpServlet {
 				if (day == null) {
 					day = new DayEntity();
 					day.setDate(startDateString);
-					System.out.println("Creating new day:" + startDateString);
-				} else {
-					System.out.println("Found day:" + startDateString);
 				}
 
 				Key<TimeslotEntity> key = DAO.ofy().save().entity(timeslot).now();
@@ -85,7 +83,7 @@ public class TimeslotsServlet extends HttpServlet {
 		log.info("created " + timeslot);
 
 		resp.setStatus(HttpServletResponse.SC_CREATED);
-		ServletUtils.writeResponseJson(req, resp, timeslot);
+		ServletUtils.writeResponseJson(resp, timeslot);
 
 	}
 }
