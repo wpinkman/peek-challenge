@@ -55,7 +55,7 @@ public class BookingServlet extends HttpServlet {
 					}
 				}
 
-				// need to allocate a boat form those available (assigned)
+				// need to allocate a boat from those available (assigned)
 				// to the time slot
 				Long allocatedBoatId = null;
 				if (!booked) {
