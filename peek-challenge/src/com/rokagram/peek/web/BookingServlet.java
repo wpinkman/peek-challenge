@@ -1,7 +1,6 @@
 package com.rokagram.peek.web;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.googlecode.objectify.Work;
-import com.googlecode.objectify.cmd.Query;
 import com.rokagram.peek.dao.DAO;
 import com.rokagram.peek.entity.AssignedBoat;
 import com.rokagram.peek.entity.BookingEntity;
@@ -78,18 +76,14 @@ public class BookingServlet extends HttpServlet {
 						Date startDate = new Date(timeslot.getStart_time() * 1000);
 						String newString = new SimpleDateFormat(TimeslotsServlet.DATE_FORMAT).format(startDate);
 
-						try {
-							Query<TimeslotEntity> query = TimeslotsServlet.createTimeslotQuery(newString, true);
-							for (TimeslotEntity ts : query) {
+						List<TimeslotEntity> timeslotsForDay = DAO.getTimeslotsForDay(newString);
+						for (TimeslotEntity ts : timeslotsForDay) {
 
-								if (timeslot.overlapsWith(ts) && ts.getAssignedBoats().containsKey(allocatedBoatId)) {
-									AssignedBoat assignedBoat = ts.getAssignedBoats().get(allocatedBoatId);
-									assignedBoat.setAvailable(false);
-									entitiesToSave.add(ts);
-								}
+							if (timeslot.overlapsWith(ts) && ts.getAssignedBoats().containsKey(allocatedBoatId)) {
+								AssignedBoat assignedBoat = ts.getAssignedBoats().get(allocatedBoatId);
+								assignedBoat.setAvailable(false);
+								entitiesToSave.add(ts);
 							}
-
-						} catch (ParseException e) {
 						}
 
 					}

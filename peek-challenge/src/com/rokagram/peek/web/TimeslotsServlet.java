@@ -1,7 +1,6 @@
 package com.rokagram.peek.web;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -12,8 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.googlecode.objectify.cmd.Query;
+import com.googlecode.objectify.Work;
 import com.rokagram.peek.dao.DAO;
+import com.rokagram.peek.entity.DayEntity;
 import com.rokagram.peek.entity.TimeslotEntity;
 
 public class TimeslotsServlet extends HttpServlet {
@@ -25,75 +25,85 @@ public class TimeslotsServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		try {
-			String dateParam = req.getParameter("date");
+		String dateParam = req.getParameter("date");
 
-			if (dateParam != null) {
+		if (dateParam != null) {
 
-				List<TimeslotEntity> timeslots = null;
-				if (dateParam.equals("*")) {
-					timeslots = DAO.ofy().load().type(TimeslotEntity.class).list();
+			List<TimeslotEntity> timeslots = DAO.getTimeslotsForDay(dateParam);
 
-				} else {
+			log.info(dateParam + ": " + timeslots.toString());
 
-					Query<TimeslotEntity> query = createTimeslotQuery(dateParam, false);
-					timeslots = query.list();
+			ServletUtils.writeResponseJson(req, resp, timeslots);
 
-					log.info(dateParam + ": " + timeslots.toString());
-
-				}
-				ServletUtils.writeResponseJson(req, resp, timeslots);
-			} else {
-				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			}
-		} catch (ParseException e) {
+		} else {
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 
 	}
 
-	public static Query<TimeslotEntity> createTimeslotQuery(String dateParam, boolean transactionless)
-			throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-		Date date = sdf.parse(dateParam);
-
-		long time = date.getTime() / 1000;
-
-		Query<TimeslotEntity> ret = null;
-
-		if (transactionless) {
-			ret = DAO.ofy().transactionless().load().type(TimeslotEntity.class);
-		} else {
-			ret = DAO.ofy().load().type(TimeslotEntity.class);
-		}
-		ret = ret.filter("start_time >=", time).filter("start_time <", time + 86400L).order("start_time");
-
-		return ret;
-
-	}
+	// public static Query<TimeslotEntity> createTimeslotQuery(String dateParam,
+	// boolean transactionless)
+	// throws ParseException {
+	// SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+	// Date date = sdf.parse(dateParam);
+	//
+	// long time = date.getTime() / 1000;
+	//
+	// Query<TimeslotEntity> ret = null;
+	//
+	// if (transactionless) {
+	// ret = DAO.ofy().transactionless().load().type(TimeslotEntity.class);
+	// } else {
+	// ret = DAO.ofy().load().type(TimeslotEntity.class);
+	// }
+	// ret = ret.filter("start_time >=", time).filter("start_time <", time +
+	// 86400L).order("start_time");
+	//
+	// return ret;
+	//
+	// }
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		try {
-			TimeslotEntity timeslot = new TimeslotEntity();
+		String startTimeParam = req.getParameter("timeslot[start_time]");
+		final String durationParam = req.getParameter("timeslot[duration]");
 
-			String startTimeParam = req.getParameter("timeslot[start_time]");
-			String durationParam = req.getParameter("timeslot[duration]");
+		final long startTime = Long.parseLong(startTimeParam);
 
-			long startTime = Long.parseLong(startTimeParam);
-			timeslot.setStart_time(startTime);
-			timeslot.setDuration(Integer.parseInt(durationParam));
+		Date startDate = new Date(startTime * 1000);
+		final String startDateString = new SimpleDateFormat(TimeslotsServlet.DATE_FORMAT).format(startDate);
 
-			DAO.ofy().save().entity(timeslot).now();
+		TimeslotEntity timeslot = DAO.ofy().transact(new Work<TimeslotEntity>() {
 
-			log.info("created " + timeslot);
+			@Override
+			public TimeslotEntity run() {
 
-			resp.setStatus(HttpServletResponse.SC_CREATED);
-			ServletUtils.writeResponseJson(req, resp, timeslot);
+				TimeslotEntity timeslot = new TimeslotEntity();
+				timeslot.setStart_time(startTime);
+				timeslot.setDuration(Integer.parseInt(durationParam));
 
-		} catch (NumberFormatException nfe) {
-			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		}
+				DayEntity day = DAO.ofy().load().type(DayEntity.class).id(startDateString).now();
+				if (day == null) {
+					day = new DayEntity();
+					day.setDate(startDateString);
+					System.out.println("Creating new day:" + startDateString);
+				} else {
+					System.out.println("Found day:" + startDateString);
+				}
+
+				day.getTimeslots().add(DAO.ofy().save().entity(timeslot).now());
+				DAO.ofy().save().entity(day).now();
+
+				return timeslot;
+			}
+
+		});
+
+		log.info("created " + timeslot);
+
+		resp.setStatus(HttpServletResponse.SC_CREATED);
+		ServletUtils.writeResponseJson(req, resp, timeslot);
+
 	}
 }

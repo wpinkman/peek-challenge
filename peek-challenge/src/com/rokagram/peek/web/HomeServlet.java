@@ -14,6 +14,7 @@ import com.googlecode.objectify.cmd.LoadType;
 import com.rokagram.peek.dao.DAO;
 import com.rokagram.peek.entity.BoatEntity;
 import com.rokagram.peek.entity.BookingEntity;
+import com.rokagram.peek.entity.DayEntity;
 import com.rokagram.peek.entity.TimeslotEntity;
 
 public class HomeServlet extends HttpServlet {
@@ -40,6 +41,14 @@ public class HomeServlet extends HttpServlet {
 		writer.println();
 		writeJson(writer, boats);
 
+		writeH4(writer, "Days");
+		LoadType<DayEntity> days = DAO.ofy().load().type(DayEntity.class);
+		for (DayEntity day : days) {
+			writer.println(day + "<br>");
+		}
+
+		writer.println();
+
 		writeH4(writer, "Timeslots");
 		LoadType<TimeslotEntity> timeslots = DAO.ofy().load().type(TimeslotEntity.class);
 		for (TimeslotEntity ts : timeslots) {
@@ -48,6 +57,7 @@ public class HomeServlet extends HttpServlet {
 
 		writer.println();
 		writeJson(writer, timeslots);
+
 		writeH4(writer, "Bookings");
 		LoadType<BookingEntity> bookings = DAO.ofy().load().type(BookingEntity.class);
 		for (BookingEntity booking : bookings) {
@@ -67,6 +77,8 @@ public class HomeServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		DAO.ofy().delete().keys(DAO.ofy().load().type(DayEntity.class).keys());
 
 		DAO.ofy().delete().keys(DAO.ofy().load().type(TimeslotEntity.class).keys());
 
