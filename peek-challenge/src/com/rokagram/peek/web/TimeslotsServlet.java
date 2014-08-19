@@ -19,6 +19,7 @@ import com.rokagram.peek.entity.TimeslotEntity;
 
 public class TimeslotsServlet extends HttpServlet {
 
+	// per spec
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
 	private static final long serialVersionUID = 1L;
 	public static final Logger log = Logger.getLogger(TimeslotsServlet.class.getName());
