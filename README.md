@@ -21,11 +21,13 @@ A: Yes!
 
 #### Ideas for Improvement
 
-## challenge
+Improvements to the challenge
+
 1. Consider using the plural in RESTful API endpoints. For example, instead of having "boat" and "boats", just have "boats". A POST to "boats" adds a boat, a GET reads the list of boats. A specific boat could then be referenced by the semantic "boats/boat-id".
 2. In case of a conflict of boat allocation as in Test Case 2, it might be better to reflect that a boat is no longer available by not returning it in the "boats" field of the timeslots response. 
 
-## implementation
+Improvements to this implementation
+
 1. More efficient allocation of bookings to available boats. This implemntation tries to use a boat that is already going in the timeslot availble. This tends to avoid conflicts like in test case 2, however, it does not always maximize the largest available booking. Instead, more knowledge of time slot conflict could be added to the booking to boat allocation to keep larger blocks of seats available for booking.
 
 #### Dependancies
