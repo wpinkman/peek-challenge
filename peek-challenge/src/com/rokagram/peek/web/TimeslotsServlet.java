@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Work;
 import com.rokagram.peek.dao.DAO;
 import com.rokagram.peek.entity.DayEntity;
@@ -70,7 +71,10 @@ public class TimeslotsServlet extends HttpServlet {
 					System.out.println("Found day:" + startDateString);
 				}
 
-				day.getTimeslots().add(DAO.ofy().save().entity(timeslot).now());
+				Key<TimeslotEntity> key = DAO.ofy().save().entity(timeslot).now();
+				if (!day.getTimeslots().contains(key)) {
+					day.getTimeslots().add(key);
+				}
 				DAO.ofy().save().entity(day).now();
 
 				return timeslot;
