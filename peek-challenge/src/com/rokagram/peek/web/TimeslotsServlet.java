@@ -41,28 +41,6 @@ public class TimeslotsServlet extends HttpServlet {
 
 	}
 
-	// public static Query<TimeslotEntity> createTimeslotQuery(String dateParam,
-	// boolean transactionless)
-	// throws ParseException {
-	// SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-	// Date date = sdf.parse(dateParam);
-	//
-	// long time = date.getTime() / 1000;
-	//
-	// Query<TimeslotEntity> ret = null;
-	//
-	// if (transactionless) {
-	// ret = DAO.ofy().transactionless().load().type(TimeslotEntity.class);
-	// } else {
-	// ret = DAO.ofy().load().type(TimeslotEntity.class);
-	// }
-	// ret = ret.filter("start_time >=", time).filter("start_time <", time +
-	// 86400L).order("start_time");
-	//
-	// return ret;
-	//
-	// }
-
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
