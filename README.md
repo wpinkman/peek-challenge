@@ -28,7 +28,7 @@ Improvements to the challenge
 
 Improvements to this implementation
 
-1. More efficient allocation of bookings to available boats. This implemntation tries to use a boat that is already going in the timeslot availble. This tends to avoid conflicts like in test case 2, however, it does not always maximize the largest available booking. Instead, more knowledge of time slot conflict could be added to the booking to boat allocation to keep larger blocks of seats available for booking.
+1. More efficient allocation of bookings to available boats. This implementation tries to use a boat that is already going in the timeslot availble. This tends to avoid conflicts like in test case 2, however, it does not always maximize the largest available booking. Instead, more knowledge of time slot conflict could be added to the booking to boat allocation to keep larger blocks of seats available for booking.
 
 #### Dependancies
 1. Datastore interface (also adds caching): https://code.google.com/p/objectify-appengine/
